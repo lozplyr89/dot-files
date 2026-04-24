@@ -7,7 +7,7 @@
 
 window#waybar {
     background: rgba(14, 35, 80, 0.50);
-    color: #c0caf5;
+    color: #8cccff;
     font-family: 
         SpaceMono Nerd Font,
         feather;
@@ -87,7 +87,7 @@ window#waybar {
 }
 
 #workspaces button.active {
-    background: #13131d; 
+    background: #32324c; 
 }
 
 #workspaces button:hover {

@@ -2,11 +2,13 @@ My **DESKTOP** dotfiles so far, will definitely have to redo some stuff probably
 
 **DEPENDENCIES**
 ```Kitty```
+
 ```nvim```
+
 ```waybar```
+
 ```yazi```
-```hyprmod```
 
-there's probably more that i'll add later
+There's probably more that I'll add later
 
-idk why im putting this kind of effort into this, if im the only one who's really gonna give a shit but oh well
+This is primarily a glorified backup just incase I break **Something** which I already did once/Incase I need to show someone how something works

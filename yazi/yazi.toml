@@ -25,6 +25,12 @@ ueberzug_scale  = 1
 ueberzug_offset = [ 0, 0, 0, 0 ]
 
 [opener]
+Shell  = [
+	{ run = 'sh $1', block = true, desc = "Run in Shell" }
+]
+run_exec = [
+	 { run = '$1', orphan = true, desc = "Run GUI App" }
+]
 edit = [
 	{ run = "nvim %s", desc = "$EDITOR",      for = "unix", block = true },
 	{ run = "code %s",          desc = "code",         for = "windows", orphan = true },
@@ -39,7 +45,7 @@ play = [
 	{ run = "mediainfo %s1 & pause", block = true, desc = "Show media info", for = "windows" },
 ]
 open = [
-	{ run = "xdg-open %s1",    desc = "Open", for = "linux" },
+	{ run = "xdg-open $1",    desc = "Open", for = "linux", orphan = true},
 	{ run = "open %s",         desc = "Open", for = "macos" },
 	{ run = 'start "" %s1',    desc = "Open", for = "windows", orphan = true },
 	{ run = "termux-open %s1", desc = "Open", for = "android" },
@@ -61,15 +67,21 @@ download = [
 appimage = [
 	{ run = '"$0"', desc = "Run AppImage", orphan = true, for = "unix" }
 ]
+
 [open]
 prepend_rules = [
-	{name = "*.[Aa]pp[Ii]mage", use = [ "appimage" ] },
+	{ mime = "application/x-executable", use = [ "run_exec", "open" ] },
+    	{ mime = "application/x-pie-executable", use = [ "run_exec", "open" ] },
+	{ mime = "application/executable", use = "run_exec" },
+    	{ mime = "application/x-sharedlib",  use = "run_exec" },
+    	{ mime = "application/x-pie-executable", use = "run_exec" },
+	{ name = "*.bin", use = "run_exec" },
 ]
 rules = [
 	# Folder
 	{ url = "*/", use = [ "edit", "open", "reveal" ] },
-	# Text
-	{ mime = "text/*", use = [ "edit", "reveal" ] },
+	# Text + Shell
+	{ mime = "text/*", use = [ "edit", "reveal", "Shell" ] },
 	# Image
 	{ mime = "image/*", use = [ "open", "reveal" ] },
 	# Media

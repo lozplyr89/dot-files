@@ -17,6 +17,8 @@ vim.o.clipboard = "unnamedplus" --ties "yank" commands to the system keyboard
 vim.keymap.set({'n', 'v', 'o'}, 'j', 'k', {noremap = true})
 vim.keymap.set({'n', 'v', 'o'}, 'k', 'j', {noremap = true})
 
+--Make jj switch to normal mode
+vim.keymap.set("i", "jj", "<Esc>")
 
 --Plugin Setup
 vim.call('plug#begin')
@@ -25,14 +27,14 @@ vim.call('plug#begin')
 	Plug 'm4xshen/autoclose.nvim' -- [ = []
 	Plug 'nvim-treesitter/nvim-treesitter'
 	Plug 'bluz71/vim-nightfly-colors'
+	Plug 'ThePrimeagen/vim-be-good'
 	
 vim.call('plug#end')
 
 --Plugin Config
-vim.cmd [[colorscheme nightfly]]
+vim.cmd [[colorscheme nightfly]] --setting theme to nightfly
 vim.api.nvim_set_hl(0, "Normal", { bg = "none"}) --To match kitty theme
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" }) --To match kitty theme
-
 
 require("autoclose").setup({ --for autoclose
    keys = {
@@ -45,9 +47,9 @@ require("autoclose").setup({ --for autoclose
       ["]"] = { escape = true, close = false, pair = "[]" },
       ["}"] = { escape = true, close = false, pair = "{}" },
 
-      ['"'] = { escape = true, close = true, pair = '""' },
-      ["'"] = { escape = true, close = true, pair = "''" },
-      ["`"] = { escape = true, close = true, pair = "``" },
+      ['"'] = { escape = true, close = false, pair = '""' },
+      ["'"] = { escape = true, close = false, pair = "''" },
+      ["`"] = { escape = true, close = false, pair = "``" },
    },
       options = {
       disabled_filetypes = { "text" },

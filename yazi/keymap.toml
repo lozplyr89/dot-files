@@ -1,7 +1,6 @@
 # A TOML linter such as https://taplo.tamasfe.dev/ can use this schema to validate your config.
 # If you encounter any issues, please make an issue at https://github.com/yazi-rs/schemas.
 "$schema" = "https://yazi-rs.github.io/schemas/keymap.json"
-
 [mgr]
 
 keymap = [
@@ -432,3 +431,8 @@ desc = "sudo delete"
 on = ["R", "m"]
 run = "plugin sudo -- chmod"
 desc = "sudo chmod"
+
+#Sync Yank with keyboard
+[[mgr.prepend_keymap]]
+on  = "y"
+run = [ 'shell -- for path in %s; do echo "file://$path"; done | wl-copy -t text/uri-list', "yank" ]

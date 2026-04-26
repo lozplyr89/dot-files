@@ -74,7 +74,7 @@ prepend_rules = [
     	{ mime = "application/x-pie-executable", use = [ "run_exec", "open" ] },
 	{ mime = "application/executable", use = "run_exec" },
     	{ mime = "application/x-sharedlib",  use = "run_exec" },
-    	{ mime = "application/x-pie-executable", use = "run_exec" },
+    	{ mime = "application/pie-executable", use = "run_exec" },
 	{ name = "*.bin", use = "run_exec" },
 ]
 rules = [

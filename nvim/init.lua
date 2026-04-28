@@ -28,7 +28,9 @@ vim.call('plug#begin')
 	Plug 'nvim-treesitter/nvim-treesitter'
 	Plug 'bluz71/vim-nightfly-colors'
 	Plug 'ThePrimeagen/vim-be-good'
-	
+	Plug 'habamax/vim-godot'
+	Plug 'neovim/nvim-lspconfig'
+
 vim.call('plug#end')
 
 --Plugin Config
@@ -61,7 +63,7 @@ require("autoclose").setup({ --for autoclose
    },
 })
 
-require ("nvim-treesitter.config").setup({
+require ("nvim-treesitter.config").setup({ --treesitter
 	 auto_install = true,
 	-- A list of parser names, or "all"
   ensure_installed = { "gdscript", "godot_resource", "gdshader", "godot", "c", "lua", "vim", "vimdoc", "query", "python", "javascript" },
@@ -79,5 +81,10 @@ require ("nvim-treesitter.config").setup({
 	callback = function() vim.treesitter.start() end,
 	})
 })
-
-
+--Enables Godot LSP
+vim.lsp.enable('gdscript')
+local gdproject = io.open(vim.fn.getcwd()..'/project.godot', 'r')
+if gdproject then
+    io.close(gdproject)
+    vim.fn.serverstart './godothost'
+end

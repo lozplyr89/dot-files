@@ -99,8 +99,12 @@
         "interval": 1
     },
 "mpris": {
-	"format": "DEFAULT: {player_icon} {dynamic}",
-	"format-paused": "DEFAULT: {status_icon} <i>{dynamic}</i>",
+	"format": "{player_icon} {dynamic}",
+	"format-paused": "{status_icon} <i>{dynamic}</i>",
+	"max-length": 60,
+	//"title-len":20,
+	//"artist-len":10,
+	//"dynamic-len":40,
 	"player-icons": {
 		"default": "▶",
 		"mpv": "🎵"

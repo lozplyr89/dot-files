@@ -1,3 +1,5 @@
+# A TOML linter such as Tombi can use this schema to validate your config.
+# If you encounter any problems, please file an issue at https://github.com/yazi-rs/schemas.
 [mgr]
 ratio          = [ 1, 4, 3 ]
 sort_by        = "alphabetical"
@@ -5,12 +7,12 @@ sort_sensitive = false
 sort_reverse 	 = false
 sort_dir_first = true
 sort_translit  = false
+sort_fallback  = "alphabetical"
 linemode       = "none"
 show_hidden    = true
 show_symlink   = true
 scrolloff      = 5
-mouse_events   = [ "click", "scroll" ]
-title_format   = "Yazi: {cwd}"
+mouse_events   = [ "click", "scroll", "drag" ]
 
 [preview]
 wrap            = "no"
@@ -25,22 +27,17 @@ ueberzug_scale  = 1
 ueberzug_offset = [ 0, 0, 0, 0 ]
 
 [opener]
-Shell  = [
-	{ run = 'sh $1', block = true, desc = "Run in Shell" }
-]
 run_exec = [
-	 { run = '$1', orphan = true, desc = "Run GUI App" }
+	{ run = 'sh "$@"', orphan = true, desc = "Run GUI App"}
+]
+Shell = [
+	{run = "$@", block = true, desc = "Run in Shell"}
 ]
 AP = [
-	{ run = 'ArchipelagoLauncher $1', orphan = true, desc = "Open in AP" }
-]
-Poptracker = [
-	{ run = 'poptracker $1', orphan = true, desc = "Install in Poptracker"}
+	{ run = 'ArchipelagoLauncher "$@"', orphan = true, desc = "Open in AP"}
 ]
 edit = [
 	{ run = "nvim %s", desc = "$EDITOR",      for = "unix", block = true },
-	{ run = "code %s",          desc = "code",         for = "windows", orphan = true },
-	{ run = "code -w %s",       desc = "code (block)", for = "windows", block = true },
 ]
 play = [
 	{ run = "xdg-open %s1",    desc = "Play", for = "linux", orphan = true },
@@ -51,7 +48,7 @@ play = [
 	{ run = "mediainfo %s1 & pause", block = true, desc = "Show media info", for = "windows" },
 ]
 open = [
-	{ run = "xdg-open $1",    desc = "Open", for = "linux", orphan = true},
+	{ run = "xdg-open %s1",    desc = "Open", for = "linux" },
 	{ run = "open %s",         desc = "Open", for = "macos" },
 	{ run = 'start "" %s1',    desc = "Open", for = "windows", orphan = true },
 	{ run = "termux-open %s1", desc = "Open", for = "android" },
@@ -70,9 +67,6 @@ download = [
 	{ run = "ya emit download --open %S", desc = "Download and open" },
 	{ run = "ya emit download %S",        desc = "Download" },
 ]
-appimage = [
-	{ run = '"$0"', desc = "Run AppImage", orphan = true, for = "unix" }
-]
 
 [open]
 prepend_rules = [
@@ -81,22 +75,21 @@ prepend_rules = [
 	{ mime = "application/executable", use = "run_exec" },
     	{ mime = "application/x-sharedlib",  use = "run_exec" },
     	{ mime = "application/pie-executable", use = "run_exec" },
-	{ name = "*.bin", use = "run_exec" },
+	{ url = "*.bin", use = "run_exec" },
 ]
 rules = [
 	# Folder
-	{ url = "*/", use = [ "edit", "open", "reveal" ] },
-	# Text + Shell
-	{ mime = "text/*", use = [ "edit", "reveal", "Shell" ] },
+	{ url = "*/", use = [ "open", "edit", "reveal" ] },
+	# Text
+	{ mime = "text/*", use = [ "edit", "Shell" ] },
 	# Image
-	{ mime = "image/*", use = [ "open", "reveal" ] },
+	{ mime = "image/*", use = [ "open" ] },
 	# Media
-	{ mime = "{audio,video}/*", use = [ "play", "reveal" ] },
+	{ mime = "{audio,video}/*", use = [ "play"] },
+	# Code
+	{ mime = "application/{json,ndjson,javascript,wine-extension-ini}", use = [ "edit", "reveal" ] },
 	# Archive
-	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", use = [ "extract", "AP", "Poptracker" ] },
-	# JSON
-	{ mime = "application/{json,ndjson}", use = [ "edit", "reveal" ] },
-	{ mime = "*/javascript", use = [ "edit", "reveal" ] },
+	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", use = [ "extract", "reveal" ] },
 	# Empty file
 	{ mime = "inode/empty", use = [ "edit", "reveal" ] },
 	# Virtual file system
@@ -106,8 +99,11 @@ rules = [
 ]
 
 [tasks]
-micro_workers    = 10
-macro_workers    = 10
+file_workers     = 3
+plugin_workers   = 5
+fetch_workers    = 5
+preload_workers  = 2
+process_workers  = 5
 bizarre_retry    = 3
 image_alloc      = 536870912  # 512MB
 image_bound      = [ 10000, 10000 ]
@@ -115,12 +111,15 @@ suppress_preload = false
 
 [plugin]
 fetchers = [
-	# Mimetype
-	{ id = "mime", url = "*/",         run = "mime.dir", prio = "high" },
-	{ id = "mime", url = "local://*",  run = "mime.local", prio = "high" },
-	{ id = "mime", url = "remote://*", run = "mime.remote", prio = "high" },
+	# MIME-type
+	{ url = "*/",         run = "mime.dir",    prio = "high", group = "mime" },
+	{ url = "local://*",  run = "mime.local",  prio = "high", group = "mime" },
+	{ url = "remote://*", run = "mime.remote", prio = "high", group = "mime" },
 ]
 spotters = [
+	# Multi-file
+	{ mime = "multi/*", run = "multi" },
+	# Folder
 	{ url = "*/", run = "folder" },
 	# Code
 	{ mime = "text/*", run = "code" },

@@ -13,7 +13,7 @@ This is primarily a glorified backup just incase I break **Something** which I a
 
 ```import.sh``` is just to automate copying over my config files so I stop doing it manually like a neanderthal.
 
-```themeswitcher.sh``` is what it sounds like. It's a shell script that lets you pick from your ~/.config/.themes/. It's pretty basic but it is really cool and I plan to add more themes to further utilize it
+```theme-switcher.sh``` is what it sounds like. It's a shell script that lets you pick from your ~/.config/.themes/. It's pretty basic but it is really cool and I plan to add more themes to further utilize it
 
 There are further dependencies obv, but it's not my job to tell you what those are as it's a personal backup more than anything.
 

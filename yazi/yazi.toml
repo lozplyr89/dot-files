@@ -28,10 +28,10 @@ ueberzug_offset = [ 0, 0, 0, 0 ]
 
 [opener]
 run_exec = [
-	{ run = 'sh "$@"', orphan = true, desc = "Run GUI App"}
+	{ run = "$@", orphan = true, desc = "Run GUI App"}
 ]
 Shell = [
-	{run = "$@", block = true, desc = "Run in Shell"}
+	{run = 'sh "$@"', block = true, desc = "Run in Shell"}
 ]
 AP = [
 	{ run = 'ArchipelagoLauncher "$@"', orphan = true, desc = "Open in AP"}
